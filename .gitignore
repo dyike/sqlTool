@@ -1,3 +1,4 @@
 *.DS_Store
 /vender
 src/test.php
+src/sqldiff.php
