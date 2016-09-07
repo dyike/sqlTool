@@ -4,7 +4,7 @@
     "description": "sql diff tool.",
     "keywords": [
         "mysql",
-        "sqlTool",
+        "sqlTool"
     ],
     "homepage": "https://github.com/dyike/sqlTool",
     "license": "MIT",
