@@ -27,7 +27,7 @@ class Sql
      */
     public function getTables()
     {
-        $res = $this->pdo->query('SHOW TABLES')->fetchAll(PDO::FETCH_ASSOC);
+        $res = $this->pdo->query('SHOW TABLES')->fetchAll(\PDO::FETCH_ASSOC);
         $column = 'Tables_in_' . $this->dbName;
         $tables = array_column($res, $column);
         return $tables;
@@ -40,7 +40,7 @@ class Sql
      */
     public function getFields($tableName)
     {
-        $fields = $this->pdo->query("show full fields from $tableName")->fetchAll(PDO::FETCH_ASSOC);
+        $fields = $this->pdo->query("show full fields from $tableName")->fetchAll(\PDO::FETCH_ASSOC);
         return $fields;
     }
 
@@ -51,22 +51,10 @@ class Sql
      */
     public function getCreateTableSql($tableName)
     {
-        $res = $this->pdo->query("show create table $tableName")->fetchAll(PDO::FETCH_ASSOC);
+        $res = $this->pdo->query("show create table $tableName")->fetchAll(\PDO::FETCH_ASSOC);
         $tableSql = array_column($res, 'Create Table');
         return $tableSql;
     }
-
-    /**
-     * 判断线上需要增加的表
-     * @param  [array] $tableOnline  线上的表
-     * @param  [array] $tableOffLine 线下的表
-     * @return [array] 计算两个表的差集
-     */
-    // public function getTableToAdd($tableOnline, $tableOffLine)
-    // {
-    //     $res = array_diff($tableOffLine, $tableOnline);
-    //     return $res;
-    // }
 
 }
 
