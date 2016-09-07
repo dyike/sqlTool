@@ -37,7 +37,6 @@ foreach ($getTablesToAdd as $value) {
     echo "<br>";
 }
 
-
 foreach ($tOnLine as $value) {
     //获取线下表的字段
     $fieldsOffLine = $tableOffLine->getFields($value);
