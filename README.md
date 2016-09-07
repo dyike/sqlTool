@@ -28,6 +28,8 @@ $tableOnLine = new Sql('hostOFFLine', 'dbName', 'dbUser', 'dbPassword', 'dbPort'
 $tOnLine = $tableOnLine->getTables();
 //线下的数据表
 $tOffLine = $tableOffLine->getTables();
+
+$judgeSql = new JudgeSql();
 //新增的数据
 $getTablesToAdd = $judgeSql->getTableToAdd($tOnLine, $tOffLine);
 foreach ($getTablesToAdd as $value) {
