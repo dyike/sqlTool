@@ -17,7 +17,7 @@ class Sql
         $this->dbUser = $dbUser;
         $this->dbPass = $dbPass;
         $this->dbPort = $dbPort;
-        $pdo = new PDO("mysql:host=$this->dbHost; dbname=$this->dbName; port=$this->dbPort", $this->dbUser, $this->dbPass);
+        $pdo = new \PDO("mysql:host=$this->dbHost; dbname=$this->dbName; port=$this->dbPort", $this->dbUser, $this->dbPass);
         $this->pdo = $pdo;
     }
 
