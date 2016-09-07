@@ -1,0 +1,3 @@
+*.DS_Store
+/vender
+src/test.php

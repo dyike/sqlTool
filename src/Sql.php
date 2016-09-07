@@ -34,13 +34,26 @@ class Sql
     }
 
     /**
-     * 获取表的字段
+     * 获取表的字段的全部信息
      * @param  [string] $tableName 表名
      * @return [array]  字段名
      */
     public function getFields($tableName)
     {
         $fields = $this->pdo->query("show full fields from $tableName")->fetchAll(\PDO::FETCH_ASSOC);
+        return $fields;
+    }
+
+    /**
+     * 只获取表的字段名
+     * @param  [string] $tableName
+     * @return [array]
+     */
+    public function getTableFields($tableName)
+    {
+        $fields = $this->pdo->prepare("DESCRIBE $tableName");
+        $fields->execute();
+        $fields = $fields->fetchAll(\PDO::FETCH_COLUMN);
         return $fields;
     }
 
@@ -56,31 +69,5 @@ class Sql
         return $tableSql;
     }
 
+
 }
-
-// $tableOffLine = new Sql('192.168.200.252', 'patient', 'php_biz', 'drink_coffee', '3307');
-// $tableOnLine = new Sql('192.168.33.10', 'patient', 'root', '123456yf', '3306');
-// echo "<pre>";
-// $tOnline = $tableOnLine->getTables();
-// $tOffLine = $tableOffLine->getTables();
-
-
-// $fields = $tableOffLine->getFields('Blood');
-// print_r($fields);
-
-// $sql = $tableOffLine->getCreateTableSql("Blood");
-// print_r($sql);
-
-// //$tableToAdd = $tableOffLine->getTableToAdd($tOnline, $tOffLine);
-
-// $table = new JudgeSql();
-// $tableToAdd->getTableToAdd($tOnline, $tOffLine);
-// print_r($tableToAdd);
-
-
-
-
-
-
-
-
