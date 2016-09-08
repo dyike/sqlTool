@@ -1,6 +1,6 @@
 <?php
 
-namespace Dyike\JudgeSql;
+namespace Dyike\Sqltool;
 
 class JudgeSql
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dyike\Sql;
+namespace Dyike\Sqltool;
 
 class Sql
 {
