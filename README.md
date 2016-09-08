@@ -52,3 +52,6 @@ foreach ($tOnLine as $value) {
 
 ```
 
+# License
+
+MIT
