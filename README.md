@@ -35,7 +35,7 @@ $getTablesToAdd = $judgeSql->getTableToAdd($tOnLine, $tOffLine);
 foreach ($getTablesToAdd as $value) {
     //获取新增表的创建SQL
     $sql = $tableOffLine->getCreateTableSql($value);
-    print_r($sql[0]);
+    print_r($sql);
     echo "<br>";
 }
 

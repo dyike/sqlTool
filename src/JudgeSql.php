@@ -34,8 +34,6 @@ class JudgeSql
             $keysArr = array_keys($fieldsDiff);
             $valueArr = array_values($fieldsDiff);
             $fieldsStr = implode($valueArr, ",");
-            echo "<br/>";
-            echo "<font size='5' color='red'>" . $tableName . "表新增的字段:"."</font>".$fieldsStr."<br/>";
 
             $fieldsAdd = '';
             foreach ($keysArr as $val) {
@@ -56,9 +54,9 @@ class JudgeSql
 
             $fieldsAdd = rtrim($fieldsAdd, ",");
             $sql = "ALTER TABLE ".$tableName .$fieldsAdd.";";
-            echo "<br/>";
-            echo $sql;
-            echo "<br/>";
+            $type = "Add Fields";
+            $fieldsAddSql = ['Table' => $tableName, 'Type' => $type, 'Fields' => $fieldsStr, 'SQL' => $sql];
+            return $fieldsAddSql;
         }
 
     }
@@ -72,7 +70,6 @@ class JudgeSql
      */
     public function toUpdateFields($tableOffLineFields, $tableOnLineFields, $tableName)
     {
-
         $updateFieldSql = '';
 
         foreach ($tableOffLineFields as $k => $v) {
@@ -91,73 +88,39 @@ class JudgeSql
             $countOffLine = count($tableOffLineFields);
 
             if ($countOnLine == $countOffLine) {
-                $changeSql = '';
-                foreach ($fieldsOffLine as $k => $v) {
-                    if ($v['Null'] == "YES") {
-                        if ($v['Default'] === NULL) {
-                            $isNull = 'DEFAULT NULL';
-                        } elseif ($v['Default'] === '') {
-                            $isNull = 'DEFAULT'."''";
-                        } else {
-                            $isNull = 'DEFAULT'."'".$v['Default']."'";
-                        }
-                    } elseif ($v['Null'] == 'NO') {
-                        $isNull = 'NOT NULL';
-                    }
-                    switch (($v['Field'] == $tableOnLineFields[$k]['Field'])? 1 : 0) {
-                        case '1':
-                        switch (($v['Type'] == $tableOnLineFields[$k]['Type'])? 1 : 0) {
-                            case '1':
-                            switch (($v['Null'] === $tableOnLineFields[$k]['Null'])? 1 : 0) {
-                                case '1':
-                                switch (($v['Default'] === $tableOnLineFields[$k]['Default'])? 1 : 0) {
-                                    case '1':
-                                    switch (($v['Comment'] == $tableOnLineFields[$k]['Comment'])? 1 : 0) {
-                                        case '1':
-                                            break;
-                                        case '0':
-                                            $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                                            break;
-                                    }
-                                        break;
-                                    case '0':
-                                        $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                                        break;
+                if ($v['Field'] == $tableOnLineFields[$k]['Field']) {
+                    if ($v['Type'] == $tableOnLineFields[$k]['Type']) {
+                        if ($v['Null'] === $tableOnLineFields[$k]['Null']) {
+                            if ($v['Default'] === $tableOnLineFields[$k]['Default']) {
+                                if ($v['Comment'] != $tableOnLineFields[$k]['Comment']) {
+                                    $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
                                 }
-                                    break;
-                                case '0':
-                                    $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                                    break;
+                            } else {
+                                $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
                             }
-                                break;
-                            case '0':
-                                $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                                break;
+                        } else {
+                            $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
                         }
-                            break;
-                        case '0':
-                            $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                            break;
+                    } else {
+                        $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
                     }
+                } else {
+                    $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
                 }
-            } else {
-                echo "<font size='5' color='red'>".$tableName."表中新增了字段"."请调用addFields()"."</font>";
-                echo "<br/>";
-                echo "#=======================================";
-                echo "<br/>";
             }
 
-            echo $tableName."表中修改的字段：";
-            echo "<br/>";
-            echo $updateFieldSql;
-            echo "<br/>";
-            echo "#=======================================";
-
         }
+        $type = "Update Fields";
+        $FieldsUpdateSql = ['Table' => $tableName, 'Type' => $type, 'SQL' => $updateFieldSql];
+        return $FieldsUpdateSql;
 
     }
 
-
+    /**
+     * 只获取字段的转换
+     * @param  [type] $tableFields [字段名]
+     * @return [array]
+     */
     public function tableFieldsTrans($tableFields)
     {
         $fields = [];
@@ -166,7 +129,5 @@ class JudgeSql
         }
         return $fields;
     }
-
-
 
 }
