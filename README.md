@@ -18,8 +18,8 @@ composer require "dyike/sqlTool:~1.0"
 
 ```php
 
-use Dyike\Sql\Sql;
-use Dyike\JudgeSql\JudgeSql;
+use Dyike\Sqltool\Sql;
+use Dyike\Sqltool\JudgeSql;
 
 $tableOffLine = new Sql('hostOnLine', 'dbName', 'dbUser', 'dbPassword', 'dbPort');
 $tableOnLine = new Sql('hostOFFLine', 'dbName', 'dbUser', 'dbPassword', 'dbPort');

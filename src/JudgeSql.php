@@ -91,26 +91,54 @@ class JudgeSql
             $countOffLine = count($tableOffLineFields);
 
             if ($countOnLine == $countOffLine) {
-                if ($v['Field'] == $tableOnLineFields[$k]['Field']) {
-                    if ($v['Type'] == $tableOnLineFields[$k]['Type']) {
-                        if ($v['Null'] === $tableOnLineFields[$k]['Null']) {
-                            if ($v['Default'] === $tableOnLineFields[$k]['Default']) {
-                                if ($v['Comment'] != $tableOnLineFields[$k]['Comment']) {
-                                //     return true;
-                                // } else {
-                                    $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                                }
-                            } else {
-                                $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                            }
+                $changeSql = '';
+                foreach ($fieldsOffLine as $k => $v) {
+                    if ($v['Null'] == "YES") {
+                        if ($v['Default'] === NULL) {
+                            $isNull = 'DEFAULT NULL';
+                        } elseif ($v['Default'] === '') {
+                            $isNull = 'DEFAULT'."''";
                         } else {
-                            $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                            $isNull = 'DEFAULT'."'".$v['Default']."'";
                         }
-                    } else {
-                        $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                    } elseif ($v['Null'] == 'NO') {
+                        $isNull = 'NOT NULL';
                     }
-                } else {
-                    $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                    switch (($v['Field'] == $tableOnLineFields[$k]['Field'])? 1 : 0) {
+                        case '1':
+                        switch (($v['Type'] == $tableOnLineFields[$k]['Type'])? 1 : 0) {
+                            case '1':
+                            switch (($v['Null'] === $tableOnLineFields[$k]['Null'])? 1 : 0) {
+                                case '1':
+                                switch (($v['Default'] === $tableOnLineFields[$k]['Default'])? 1 : 0) {
+                                    case '1':
+                                    switch (($v['Comment'] == $tableOnLineFields[$k]['Comment'])? 1 : 0) {
+                                        case '1':
+                                            break;
+                                        case '0':
+                                            $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                                            break;
+                                    }
+                                        break;
+                                    case '0':
+                                        $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                                        break;
+                                }
+                                    break;
+                                case '0':
+                                    $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                                    break;
+                            }
+                                break;
+                            case '0':
+                                $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                                break;
+                        }
+                            break;
+                        case '0':
+                            $changeSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                            break;
+                    }
                 }
             } else {
                 echo "<font size='5' color='red'>".$tableName."表中新增了字段"."请调用addFields()"."</font>";
