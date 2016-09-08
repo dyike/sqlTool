@@ -2,8 +2,6 @@
 
 namespace Dyike\JudgeSql;
 
-use Dyike\Sql\Sql;
-
 class JudgeSql
 {
     /**

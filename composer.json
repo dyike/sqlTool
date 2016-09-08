@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Dyike\\SqlTool\\": "src/"
+            "Dyike\\Sqltool\\": "src/"
         }
     },
     "require": {
