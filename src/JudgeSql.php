@@ -112,10 +112,9 @@ class JudgeSql
         $sql = rtrim($sql, ",");
         $fieldsStr = rtrim($fields, ",");
         $updateSql .= $sql . ";";
-        if (empty($sql))
-            return false;
-        else
+        if (!empty($sql)) {
             return ['Table' => $tableName, 'opType' => $opType, 'Fields' => $fieldsStr, 'SQL' => $updateSql];
+        }
 
     }
 
