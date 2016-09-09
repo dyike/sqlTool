@@ -66,7 +66,7 @@ class Sql
     {
         $res = $this->pdo->query("show create table $tableName")->fetchAll(\PDO::FETCH_ASSOC);
         $sql = array_column($res, 'Create Table');
-        $tableSql = ['Table' => $tableName, 'Type' => 'Create Table', 'SQL' => $sql[0]];
+        $tableSql = ['Table' => $tableName, 'opType' => 'Create Table', 'SQL' => $sql[0]];
         return $tableSql;
     }
 
