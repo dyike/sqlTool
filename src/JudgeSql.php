@@ -101,14 +101,14 @@ class JudgeSql
                 }
                 //有不相同的
                 if (in_array('0', $isSame)) {
-                    $sql .=  $k .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".",";
+                    $sql .= ' CHANGE ' . $k .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".",";
                     $fields .= $k . ",";
                 }
             }
 
         }
         $opType = 'Update Fields';
-        $updateSql = 'ALTER TABLE '.$tableName. ' CHANGE ';
+        $updateSql = 'ALTER TABLE '.$tableName;
         $sql = rtrim($sql, ",");
         $fieldsStr = rtrim($fields, ",");
         $updateSql .= $sql . ";";
