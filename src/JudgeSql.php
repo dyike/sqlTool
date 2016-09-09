@@ -70,8 +70,11 @@ class JudgeSql
      */
     public function toUpdateFields($tableOffLineFields, $tableOnLineFields, $tableName)
     {
-        $updateFieldSql = '';
+        $tableOffLineFields = $this->fieldsToKeyTrans($tableOffLineFields);
+        $tableOnLineFields = $this->fieldsToKeyTrans($tableOnLineFields);
 
+        $sql = '';
+        $fields = '';
         foreach ($tableOffLineFields as $k => $v) {
             if ($v['Null'] == 'YES') {
                 if ($v['Default'] === NULL) {
@@ -84,35 +87,35 @@ class JudgeSql
             } elseif ($v['Null'] == 'NO') {
                 $isNull = 'NOT NULL';
             }
-            $countOnLine = count($tableOnLineFields);
-            $countOffLine = count($tableOffLineFields);
 
-            if ($countOnLine == $countOffLine) {
-                if ($v['Field'] == $tableOnLineFields[$k]['Field']) {
-                    if ($v['Type'] == $tableOnLineFields[$k]['Type']) {
-                        if ($v['Null'] === $tableOnLineFields[$k]['Null']) {
-                            if ($v['Default'] === $tableOnLineFields[$k]['Default']) {
-                                if ($v['Comment'] != $tableOnLineFields[$k]['Comment']) {
-                                    $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                                }
-                            } else {
-                                $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                            }
-                        } else {
-                            $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
-                        }
+            $fullFields = ['Type', 'Null', 'Default', 'Comment'];
+            if (array_key_exists($k, $tableOnLineFields)) {
+                //比较是否相同
+                $isSame = [];
+                foreach ($fullFields as $value) {
+                    if ($tableOnLineFields[$k][$value] == $tableOffLineFields[$k][$value]) {
+                        array_push($isSame, '1');
                     } else {
-                        $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                        array_push($isSame, '0');
                     }
-                } else {
-                    $updateFieldSql .= 'ALTER TABLE '.$tableName. ' CHANGE '. $v['Field'] .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".";<br/>";
+                }
+                //有不相同的
+                if (in_array('0', $isSame)) {
+                    $sql .=  $k .' '. $v['Type'].' '. $isNull. ' COMMENT '."'".$v['Comment'] ."'".",";
+                    $fields .= $k . ",";
                 }
             }
 
         }
-        $type = "Update Fields";
-        $FieldsUpdateSql = ['Table' => $tableName, 'Type' => $type, 'SQL' => $updateFieldSql];
-        return $FieldsUpdateSql;
+        $opType = 'Update Fields';
+        $updateSql = 'ALTER TABLE '.$tableName. ' CHANGE ';
+        $sql = rtrim($sql, ",");
+        $fieldsStr = rtrim($fields, ",");
+        $updateSql .= $sql . ";";
+        if (empty($sql))
+            return false;
+        else
+            return ['Table' => $tableName, 'opType' => $opType, 'Fields' => $fieldsStr, 'SQL' => $updateSql];
 
     }
 
@@ -128,6 +131,20 @@ class JudgeSql
             array_push($fields, $value['Field']);
         }
         return $fields;
+    }
+
+
+    public function fieldsToKeyTrans($tableFields)
+    {
+        $tmp = [];
+        foreach ($tableFields as $value) {
+            $tmp[$value['Field']]['Type'] = $value['Type'];
+            $tmp[$value['Field']]['Null'] = $value['Null'];
+            $tmp[$value['Field']]['Default'] = $value['Default'];
+            $tmp[$value['Field']]['Comment'] = $value['Comment'];
+            $tmp[$value['Field']]['Key'] = $value['Key'];
+        }
+        return $tmp;
     }
 
 }
