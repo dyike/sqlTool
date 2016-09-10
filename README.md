@@ -9,7 +9,7 @@ SqlTool
 使用 Composer 安装:
 
 ```
-composer require "dyike/sqlTool:~1.0"
+composer require "dyike/sqlTool:~1.1"
 ```
 
 ## 使用
