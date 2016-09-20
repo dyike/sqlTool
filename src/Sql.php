@@ -4,15 +4,16 @@ namespace Dyike\Sqltool;
 
 class Sql
 {
-    private $dbHost;
-    private $dbName;
-    private $dbUser;
-    private $dbPass;
-    private $pdo;
+private $dbHost;
+private $dbName;
+private $dbUser;
+private $dbPass;
+private $pdo;
 
-    public function __construct($dbHost, $dbName, $dbUser, $dbPass, $dbPort)
-    {
-        $this->dbHost = $dbHost;
+
+public function __construct($dbHost, $dbName, $dbUser, $dbPass, $dbPort)
+{
+    $this->dbHost = $dbHost;
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;
         $this->dbPass = $dbPass;
