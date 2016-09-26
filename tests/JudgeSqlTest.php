@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Dyike\JudgeSql\JudgeSql;
+use Dyike\JudgeSql;
 
 class JudgeSqlTest extends TestCase
 {
@@ -10,7 +10,6 @@ class JudgeSqlTest extends TestCase
         $tablesOnLine = ['test', 'ityike'];
         $tablesOffLine = ['test', 'file'];
         $diff = array_diff($tablesOffLine, $tablesOnLine);
-        print_r($diff);
         $this->assertNotEmpty($diff);
         // $this->assertNotEmpty($tablesOffLine);
     }
