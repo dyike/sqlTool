@@ -1,5 +1,5 @@
 
-SqlTool
+SqlTool[![Build Status](https://travis-ci.org/dyike/sqlTool.svg?branch=master)](https://travis-ci.org/dyike/sqlTool)
 ======
 
 基于PHP编写的查看线上线下数据库更新修改的状态，同时生成相应的sql语句。
